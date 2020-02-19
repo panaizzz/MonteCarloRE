@@ -34,9 +34,6 @@ def thread_function(name, data, iterations, period_days, plt, results):
     results.put(np.mean(price_list[-1]))
 
 
-
-
-
 def get_simulation(ticker, name):
     data = pd.DataFrame()
     data[ticker] = wb.DataReader(ticker, data_source='yahoo', start='2005-1-1')['Adj Close']
@@ -59,11 +56,7 @@ def get_simulation(ticker, name):
         x = threading.Thread(target=thread_function, args=(index, data, 50000, 365, plt, results ))
         threads.append(x)
         x.start()
-    #plt.plot(price_list)
-    # The line below is commented out by default. If you want to include it comment out the line below it as they are best used separately to save some computing time.
-    # Especially with higher number of iterations!!
 
-    #plt.show()
     for index, thread in enumerate(threads):
         logging.info("Main    : before joining thread %d.", index)
         thread.join()
@@ -71,13 +64,10 @@ def get_simulation(ticker, name):
 
 
     print(mean(list(results.queue)))
-    plt.savefig('tempplot1.png')
-    plt.show()
+    plt.savefig('tempplot2.png')
+    #plt.show()
 
 
-
-# Below we call our function. The first term is the stock ticker (This needs to be accurate),
-# and the second one is the name (This does not need to be accurate as it only affects the name of the graph)
 
 companyname = input("What is the name of the company you are wanting to simulate? ")
 ticker = input(f"What is the ticker of {companyname}? ")
