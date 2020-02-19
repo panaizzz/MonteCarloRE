@@ -6,11 +6,11 @@ import queue
 import numpy as np
 import pandas as pd
 from pandas_datareader import data as wb
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from scipy.stats import norm
 from statistics import mean
 
-def thread_function(name, data, iterations, period_days, plt, results):
+def thread_function(name, data, iterations, period_days, results):
 
     logging.info("Thread %s is starting" ,name)
     log_returns = np.log(1 + data.pct_change())
@@ -28,7 +28,7 @@ def thread_function(name, data, iterations, period_days, plt, results):
 
     # This line returns the mean of the last entries of all the lists
     #print(np.mean(price_list[-1]))
-    plt.plot(price_list)
+    #plt.plot(price_list)
     #plt.show()
 
     results.put(np.mean(price_list[-1]))
@@ -41,19 +41,19 @@ def get_simulation(ticker, name):
 
     # The next few lines are a plot mate with matplotlib.
     # The first number in the line below is how long the x-axis of the plot should be and the second number is the length of the Y-axis
-    plt.figure(figsize=(10 ,6))
+    #plt.figure(figsize=(10 ,6))
     # Below is the code to set the title of the plot. Name is derived from the input of the function
-    plt.title("1 Year Monte Carlo Simulation for " + name)
+    #plt.title("1 Year Monte Carlo Simulation for " + name)
     # The next two lines are the x and y label
-    plt.ylabel("Price (P)")
-    plt.xlabel("Time (Days)")
+    #plt.ylabel("Price (P)")
+    #plt.xlabel("Time (Days)")
     # This is the line of code that actually plots every single list that we have
     threads = list()
     results=queue.Queue()
-    for index in range(8):
+    for index in range(500):
         logging.info("Main    : create and start thread %d.", index)
 
-        x = threading.Thread(target=thread_function, args=(index, data, 50000, 365, plt, results ))
+        x = threading.Thread(target=thread_function, args=(index, data, 5000, 365, results ))
         threads.append(x)
         x.start()
 
@@ -64,11 +64,11 @@ def get_simulation(ticker, name):
 
 
     print(mean(list(results.queue)))
-    plt.savefig('tempplot2.png')
+    #plt.savefig('tempplot2.png')
     #plt.show()
 
 
 
 companyname = input("What is the name of the company you are wanting to simulate? ")
-ticker = input(f"What is the ticker of {companyname}? ")
+ticker = input("What is the ticker of {companyname}? ")
 get_simulation(ticker, companyname)
